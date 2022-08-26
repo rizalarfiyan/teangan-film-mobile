@@ -25,6 +25,24 @@ class HomeView extends GetView<HomeController> {
             const Text('Teangan Film'),
           ],
         ),
+        actions: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(
+                  right: 10,
+                ),
+                width: 36,
+                height: 36,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundImage: AssetImage(Images.userAvatar),
+                ),
+              ),
+            ],
+          )
+        ],
         backgroundColor: ColorItem.red,
         elevation: 0,
       ),

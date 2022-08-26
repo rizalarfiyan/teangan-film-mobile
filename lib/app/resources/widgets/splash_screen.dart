@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
       home: Scaffold(
         body: SafeArea(
           child: Container(
-            color: Colors.red,
+            color: ColorItem.red,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

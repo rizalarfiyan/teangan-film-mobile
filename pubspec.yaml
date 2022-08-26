@@ -23,3 +23,4 @@ flutter:
   assets:
     - .env
     - lib/app/resources/assets/logo/
+    - lib/app/resources/assets/images/
