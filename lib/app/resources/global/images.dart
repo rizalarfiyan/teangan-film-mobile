@@ -1,14 +1,9 @@
+import 'package:teangan_film_mobile/app/resources/global/path.dart';
+
 class Images {
   //* Logo
-  static String logo = assetPath('logo/main.svg');
+  static String logo = Path.assets('logo/main.svg');
 
   //* Images
-  static String userAvatar = assetPath('images/rizal.jpg');
-
-  static String assetPath(
-    String assetName, {
-    String basePath = 'lib/app/resources/assets/',
-  }) {
-    return basePath + assetName;
-  }
+  static String userAvatar = Path.assets('images/rizal.jpg');
 }

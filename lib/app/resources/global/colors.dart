@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ColorItem {
-  static var white = hexToColor("#FFFFFF");
-  static var black = hexToColor("#000000");
+  static Color white = hexToColor("#FFFFFF");
+  static Color black = hexToColor("#000000");
 
-  static var red = hexToColor("#F25F5C");
-  static var red5 = hexToColor("#f1504d");
+  static Color red = hexToColor("#F25F5C");
+  static Color red5 = hexToColor("#f1504d");
 
   static Color hexToColor(String hexColor) {
     hexColor = hexColor.toUpperCase().replaceAll("#", "");

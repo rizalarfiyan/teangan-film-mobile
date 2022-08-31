@@ -15,7 +15,7 @@ class WrapperContent extends StatelessWidget {
     this.name,
     this.description,
     this.height,
-    required this.content,
+    this.content,
   }) : super(key: key);
 
   @override
@@ -23,18 +23,18 @@ class WrapperContent extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: SafeArea(
-        child: Stack(
-          children: [
-            ClipPath(
-              clipper: RoundedClipper(),
-              child: Container(
-                width: Get.width,
-                height: height ?? 320,
-                color: ColorItem.red,
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              ClipPath(
+                clipper: RoundedClipper(),
+                child: Container(
+                  width: Get.width,
+                  height: height ?? 320,
+                  color: ColorItem.red,
+                ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Column(
+              Column(
                 children: [
                   HeaderContent(
                     name: name ?? 'Rizal Arfiyan',
@@ -43,8 +43,8 @@ class WrapperContent extends StatelessWidget {
                   ...content ?? <Widget>[],
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
