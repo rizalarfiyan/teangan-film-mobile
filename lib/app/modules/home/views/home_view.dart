@@ -32,25 +32,27 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
         Container(
-          margin: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: controller.obx(
-            (data) => LayoutBuilder(builder: (context, constraints) {
-              return GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: data?.length ?? 0,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 5 / 3,
-                ),
-                itemBuilder: (context, index) {
-                  return MovieCard(
-                    movie: data[index],
-                  );
-                },
-              );
-            }),
+            (data) => LayoutBuilder(
+              builder: (context, constraints) {
+                return GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: data?.length ?? 0,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    childAspectRatio: 5 / 3,
+                  ),
+                  itemBuilder: (context, index) {
+                    return MovieCard(
+                      movie: data[index],
+                    );
+                  },
+                );
+              },
+            ),
             onEmpty: const SizedBox(
               height: 220,
               child: Center(
@@ -68,6 +70,35 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
         ),
+        Obx(() {
+          if (controller.hasReadMore.value) {
+            return Container(
+              width: Get.width,
+              margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(4),
+                    ),
+                  ),
+                  backgroundColor: ColorItem.red,
+                ),
+                onPressed: () {
+                  controller.nextPage();
+                },
+                child: const Text(
+                  "Load More",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          }
+          return SizedBox(
+            width: Get.width,
+            height: 20,
+          );
+        }),
       ],
     );
   }
