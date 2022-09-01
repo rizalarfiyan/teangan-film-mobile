@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-class Movies {
-  Movies({
+class Movie {
+  Movie({
     required this.adult,
     required this.backdropPath,
-    required this.genreIds,
+    required this.genres,
     required this.id,
     required this.originalLanguage,
     required this.originalTitle,
@@ -20,7 +20,7 @@ class Movies {
 
   bool adult;
   String backdropPath;
-  List<int> genreIds;
+  List<Genre> genres;
   int id;
   String originalLanguage;
   String originalTitle;
@@ -33,16 +33,17 @@ class Movies {
   double voteAverage;
   double voteCount;
 
-  factory Movies.fromJson(Map<String, dynamic> json) {
-    List<int> parseGenreIds(List<dynamic> data) {
-      var genre = jsonDecode(data.toString());
-      return genre != null ? List.from(genre) : <int>[];
-    }
+  factory Movie.fromJson(Map<String, dynamic> json, List<Genre> rawGenre) {
+    var genre = jsonDecode(json['genre_ids'].toString());
+    List<int> genreIds = genre != null ? List.from(genre) : <int>[];
+    List<Genre> genres = rawGenre.where((val) {
+      return genreIds.contains(val.id);
+    }).toList();
 
-    return Movies(
+    return Movie(
       adult: json['adult'],
       backdropPath: json['backdrop_path'] ?? '',
-      genreIds: parseGenreIds(json['genre_ids']),
+      genres: genres,
       id: json['id'],
       originalLanguage: json['original_language'],
       originalTitle: json['original_title'],
@@ -54,6 +55,23 @@ class Movies {
       video: json['video'],
       voteAverage: json['vote_average'].toDouble(),
       voteCount: json['vote_count'].toDouble(),
+    );
+  }
+}
+
+class Genre {
+  Genre({
+    required this.id,
+    required this.name,
+  });
+
+  int id;
+  String name;
+
+  factory Genre.fromJson(Map<String, dynamic> json) {
+    return Genre(
+      id: json['id'],
+      name: json['name'],
     );
   }
 }

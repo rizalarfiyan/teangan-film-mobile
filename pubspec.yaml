@@ -6,6 +6,7 @@ environment:
   sdk: '>=2.17.1 <3.0.0'
 
 dependencies:
+  cached_network_image: ^3.2.0
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
@@ -24,3 +25,4 @@ flutter:
     - .env
     - lib/app/resources/assets/logo/
     - lib/app/resources/assets/images/
+    - lib/app/resources/assets/json/
