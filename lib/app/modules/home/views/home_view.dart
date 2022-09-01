@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teangan_film_mobile/app/model/movies.dart';
@@ -14,92 +15,159 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> content = [
+      Container(
+        margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: controller.obx(
+          (data) => LayoutBuilder(
+            builder: (context, constraints) {
+              return GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: data?.length ?? 0,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  childAspectRatio: 5 / 3,
+                ),
+                itemBuilder: (context, index) {
+                  return MovieCard(
+                    movie: data[index],
+                  );
+                },
+              );
+            },
+          ),
+          onEmpty: const SizedBox(
+            height: 220,
+            child: Center(
+              child: Text("Empty movies!"),
+            ),
+          ),
+          onLoading: SizedBox(
+            height: 220,
+            child: Center(
+              child: StaggeredDotsWave(
+                color: ColorItem.red5,
+                size: 36,
+              ),
+            ),
+          ),
+        ),
+      ),
+      Obx(() {
+        if (controller.hasReadMore.value) {
+          return Container(
+            width: Get.width,
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: TextButton(
+              style: TextButton.styleFrom(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(4),
+                  ),
+                ),
+                backgroundColor: ColorItem.red,
+              ),
+              onPressed: () {
+                controller.nextPage();
+              },
+              child: const Text(
+                "Load More",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        }
+        return SizedBox(
+          width: Get.width,
+          height: 20,
+        );
+      }),
+    ];
+
     return WrapperContent(
       height: 260,
       content: [
-        Container(
-          margin: const EdgeInsets.all(20),
-          width: Get.width,
-          height: 200,
-          color: Colors.grey[350],
-          child: Center(
-            child: Text(
-              "Slider",
-              style: TextStyle(
-                color: ColorItem.black,
-              ),
-            ),
+        PupularCarousel(controller: controller),
+        ...content,
+      ],
+    );
+  }
+}
+
+class PupularCarousel extends StatefulWidget {
+  const PupularCarousel({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final HomeController controller;
+
+  @override
+  State<PupularCarousel> createState() => _PupularCarouselState();
+}
+
+class _PupularCarouselState extends State<PupularCarousel> {
+  CarouselController carrousel = CarouselController();
+  int current = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(
+        top: 45,
+      ),
+      child: CarouselSlider(
+        options: CarouselOptions(
+          aspectRatio: 16 / 9,
+          enlargeCenterPage: true,
+          autoPlay: true,
+          autoPlayAnimationDuration: const Duration(
+            milliseconds: 500,
           ),
+          onPageChanged: (index, reason) {
+            setState(() {
+              current = index;
+            });
+          },
         ),
-        Container(
-          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          child: controller.obx(
-            (data) => LayoutBuilder(
-              builder: (context, constraints) {
-                return GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: data?.length ?? 0,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    childAspectRatio: 5 / 3,
-                  ),
-                  itemBuilder: (context, index) {
-                    return MovieCard(
-                      movie: data[index],
-                    );
-                  },
-                );
-              },
-            ),
-            onEmpty: const SizedBox(
-              height: 220,
-              child: Center(
-                child: Text("Empty movies!"),
-              ),
-            ),
-            onLoading: SizedBox(
-              height: 220,
-              child: Center(
-                child: StaggeredDotsWave(
-                  color: ColorItem.red5,
-                  size: 36,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Obx(() {
-          if (controller.hasReadMore.value) {
-            return Container(
-              width: Get.width,
-              margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4),
+        carouselController: carrousel,
+        items: widget.controller.popularData(4).map((movie) {
+          return Builder(
+            builder: (BuildContext context) {
+              String backDropUrl =
+                  "https://image.tmdb.org/t/p/w500${movie.backdropPath}";
+              return Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: backDropUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) {
+                        return const Center(
+                          child: StaggeredDotsWave(
+                            color: Colors.white,
+                            size: 26,
+                          ),
+                        );
+                      },
+                      errorWidget: (context, url, error) {
+                        return const Center(
+                          child: Icon(Icons.error),
+                        );
+                      },
                     ),
                   ),
-                  backgroundColor: ColorItem.red,
-                ),
-                onPressed: () {
-                  controller.nextPage();
-                },
-                child: const Text(
-                  "Load More",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            );
-          }
-          return SizedBox(
-            width: Get.width,
-            height: 20,
+                ],
+              );
+            },
           );
-        }),
-      ],
+        }).toList(),
+      ),
     );
   }
 }

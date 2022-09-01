@@ -32,4 +32,9 @@ class HomeController extends GetxController with StateMixin {
     nextPage();
     super.onInit();
   }
+
+  List<Movie> popularData(int limit) {
+    int length = rawListMovie.length;
+    return rawListMovie.getRange(0, limit > length ? length : limit).toList();
+  }
 }
